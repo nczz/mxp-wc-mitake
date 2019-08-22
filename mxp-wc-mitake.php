@@ -69,9 +69,46 @@ function mxp_mitake_get_points($username, $password, $debug = "no") {
 		$verboseLog = stream_get_contents($verbose);
 	}
 	curl_close($ch);
-	return $verboseLog . $output;
+	$resp = mxp_parse_mitake_response($output);
+	if (isset($resp['error'])) {
+		return array("statuscode" => $resp['statuscode'], "error" => $verboseLog . $output);
+	} else {
+		return array("statuscode" => $resp['statuscode'], "msgid" => $resp['msgid']);
+	}
 }
 
+function mxp_parse_mitake_response($output) {
+	if (preg_match("/statuscode/i", $output)) {
+		$statuscode = strchr($output, "="); // 取"="之後，包含"="的所有字串
+		$statuscode = str_replace("=", "", $statuscode); //將"="去除
+		$statuscode = trim($statuscode); //去除空白
+	}
+	if (preg_match("/msgid/i", $output)) {
+		$msgid = strchr($output, "="); // 取"="之後，包含"="的所有字串
+		$msgid = str_replace("=", "", $msgid); //將"="去除
+		$msgid = trim($msgid); //去除空白
+	}
+	if (preg_match("/Error/i", $output)) {
+		$error = strchr($output, "="); // 取"="之後，包含"="的所有字串
+		$error = str_replace("=", "", $error); //將"="去除
+		$error = trim($error); //去除空白
+	}
+
+	if (empty($msgid)) {
+		$mitake_results =
+		array(
+			"statuscode" => $statuscode,
+			"error" => $error,
+		);
+	} else {
+		$mitake_results =
+		array(
+			"statuscode" => $statuscode,
+			"msgid" => $msgid,
+		);
+	}
+	return $mitake_results;
+}
 function register_mxp_wc_mitake_custom_submenu_page() {
 	add_submenu_page('woocommerce', '三竹簡訊整合', '三竹簡訊整合', 'manage_options', 'mxp-wc-mitake-submenu-page', 'mxp_wc_mitake_submenu_page_callback');
 }
@@ -95,7 +132,11 @@ function mxp_sms_payment_complete_hook($order_id) {
 		if (strpos($mobile, '09') === 0 && strlen($mobile) == 10) {
 			if ($username != "" && $password != "" && $msg != "") {
 				$resp = mxp_mitake_send_sms($username, $password, $mobile, $msg, get_option("mxp_mitake_debug_mode", "no"));
-				$order->add_order_note("已傳送簡訊「" . $msg . "」至「" . $order->get_billing_last_name() . $order->get_billing_first_name() . "」手機「" . $order->get_billing_phone() . "」。" . PHP_EOL . "三竹簡訊 API 回應：" . PHP_EOL . $resp);
+				if (isset($resp['error'])) {
+					$order->add_order_note("傳送簡訊失敗！" . PHP_EOL . "三竹簡訊 API 回應：" . PHP_EOL . $resp['error']);
+				} else {
+					$order->add_order_note("已傳送簡訊「" . $msg . "」至「" . $order->get_billing_last_name() . $order->get_billing_first_name() . "」手機「" . $order->get_billing_phone() . "」。" . PHP_EOL . "三竹簡訊 API 回應：" . PHP_EOL . print_r($resp, true));
+				}
 			} else {
 				$order->add_order_note("簡訊設定參數錯誤，無法發送簡訊。");
 			}
