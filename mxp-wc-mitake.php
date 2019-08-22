@@ -22,6 +22,7 @@ function mxp_mitake_send_sms($username, $password, $mobile, $text, $debug = "no"
 		'dstaddr' => $mobile,
 		'smbody' => $text,
 		'encoding' => 'UTF8',
+		'CharsetURL' => 'UTF-8',
 	);
 
 	$url = 'http://smsapi.mitake.com.tw/api/mtk/SmSend?' . http_build_query($package, '', '&', PHP_QUERY_RFC3986);
@@ -42,7 +43,12 @@ function mxp_mitake_send_sms($username, $password, $mobile, $text, $debug = "no"
 		$verboseLog = stream_get_contents($verbose);
 	}
 	curl_close($ch);
-	return $verboseLog . $output;
+	$resp = mxp_parse_mitake_response(explode("\n", $output));
+	if (isset($resp['error'])) {
+		return array("statuscode" => $resp['statuscode'], "error" => $verboseLog . $output);
+	} else {
+		return array("statuscode" => $resp['statuscode'], "msgid" => $resp['msgid']);
+	}
 }
 
 function mxp_mitake_get_points($username, $password, $debug = "no") {
@@ -69,31 +75,28 @@ function mxp_mitake_get_points($username, $password, $debug = "no") {
 		$verboseLog = stream_get_contents($verbose);
 	}
 	curl_close($ch);
-	$resp = mxp_parse_mitake_response($output);
-	if (isset($resp['error'])) {
-		return array("statuscode" => $resp['statuscode'], "error" => $verboseLog . $output);
-	} else {
-		return array("statuscode" => $resp['statuscode'], "msgid" => $resp['msgid']);
-	}
+
+	return $verboseLog . $output;
 }
 
-function mxp_parse_mitake_response($output) {
-	if (preg_match("/statuscode/i", $output)) {
-		$statuscode = strchr($output, "="); // 取"="之後，包含"="的所有字串
-		$statuscode = str_replace("=", "", $statuscode); //將"="去除
-		$statuscode = trim($statuscode); //去除空白
+function mxp_parse_mitake_response($output_arr) {
+	foreach ($output_arr as $output) {
+		if (preg_match("/statuscode/i", $output)) {
+			$statuscode = strchr($output, "="); // 取"="之後，包含"="的所有字串
+			$statuscode = str_replace("=", "", $statuscode); //將"="去除
+			$statuscode = trim($statuscode); //去除空白
+		}
+		if (preg_match("/msgid/i", $output)) {
+			$msgid = strchr($output, "="); // 取"="之後，包含"="的所有字串
+			$msgid = str_replace("=", "", $msgid); //將"="去除
+			$msgid = trim($msgid); //去除空白
+		}
+		if (preg_match("/Error/i", $output)) {
+			$error = strchr($output, "="); // 取"="之後，包含"="的所有字串
+			$error = str_replace("=", "", $error); //將"="去除
+			$error = trim($error); //去除空白
+		}
 	}
-	if (preg_match("/msgid/i", $output)) {
-		$msgid = strchr($output, "="); // 取"="之後，包含"="的所有字串
-		$msgid = str_replace("=", "", $msgid); //將"="去除
-		$msgid = trim($msgid); //去除空白
-	}
-	if (preg_match("/Error/i", $output)) {
-		$error = strchr($output, "="); // 取"="之後，包含"="的所有字串
-		$error = str_replace("=", "", $error); //將"="去除
-		$error = trim($error); //去除空白
-	}
-
 	if (empty($msgid)) {
 		$mitake_results =
 		array(
@@ -109,6 +112,7 @@ function mxp_parse_mitake_response($output) {
 	}
 	return $mitake_results;
 }
+
 function register_mxp_wc_mitake_custom_submenu_page() {
 	add_submenu_page('woocommerce', '三竹簡訊整合', '三竹簡訊整合', 'manage_options', 'mxp-wc-mitake-submenu-page', 'mxp_wc_mitake_submenu_page_callback');
 }
