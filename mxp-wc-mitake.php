@@ -88,18 +88,22 @@ function mxp_sms_payment_complete_hook($order_id) {
 	$mobile = $order->get_billing_phone();
 	// $order->get_billing_first_name()
 	// $order->get_billing_last_name()
-	$username = get_option("mxp_mitake_account", "");
-	$password = get_option("mxp_mitake_password", "");
-	$msg = get_option("mxp_mitake_msg_body", "");
-	if (strpos($mobile, '09') === 0 && strlen($mobile) == 10) {
-		if ($username != "" && $password != "" && $msg != "") {
-			$resp = mxp_mitake_send_sms($username, $password, $mobile, $msg, get_option("mxp_mitake_debug_mode", "no"));
-			$order->add_order_note("已傳送簡訊「" . $msg . "」至「" . $order->get_billing_last_name() . $order->get_billing_first_name() . "」手機「" . $order->get_billing_phone() . "」。" . PHP_EOL . "三竹簡訊 API 回應：" . PHP_EOL . $resp);
+	if (get_option("mxp_mitake_enable_feature", "no") == "yes") {
+		$username = get_option("mxp_mitake_account", "");
+		$password = get_option("mxp_mitake_password", "");
+		$msg = get_option("mxp_mitake_msg_body", "");
+		if (strpos($mobile, '09') === 0 && strlen($mobile) == 10) {
+			if ($username != "" && $password != "" && $msg != "") {
+				$resp = mxp_mitake_send_sms($username, $password, $mobile, $msg, get_option("mxp_mitake_debug_mode", "no"));
+				$order->add_order_note("已傳送簡訊「" . $msg . "」至「" . $order->get_billing_last_name() . $order->get_billing_first_name() . "」手機「" . $order->get_billing_phone() . "」。" . PHP_EOL . "三竹簡訊 API 回應：" . PHP_EOL . $resp);
+			} else {
+				$order->add_order_note("簡訊設定參數錯誤，無法發送簡訊。");
+			}
 		} else {
-			$order->add_order_note("簡訊設定參數錯誤，無法發送簡訊。");
+			$order->add_order_note("手機格式錯誤「{$mobile}」，無法發送簡訊。");
 		}
 	} else {
-		$order->add_order_note("手機格式錯誤「{$mobile}」，無法發送簡訊。");
+		$order->add_order_note("提醒：簡訊發送功能尚未開啟，請至外掛頁面啟用。");
 	}
 }
 add_action('woocommerce_order_status_completed', 'mxp_sms_payment_complete_hook');

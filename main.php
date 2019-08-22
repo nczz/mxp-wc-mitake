@@ -8,17 +8,20 @@ if (!empty($_POST) && wp_verify_nonce($_REQUEST['_wpnonce'], 'mxp-wc-mitake-main
 	$password = $_POST['mxp_mitake_password'];
 	$msg_body = $_POST['mxp_mitake_msg_body'];
 	$debug_mode = $_POST['mxp_mitake_debug_mode'];
-	if (isset($password) && isset($account) && !empty($password) && !empty($account) && !empty($msg_body) && !empty($debug_mode)) {
+	$enable_feature = $_POST['mxp_mitake_enable_feature'];
+	if (isset($password) && isset($account) && !empty($password) && !empty($account) && !empty($msg_body) && !empty($debug_mode) && !empty($enable_feature)) {
 		update_option("mxp_mitake_account", $account);
 		update_option("mxp_mitake_password", $password);
 		update_option("mxp_mitake_msg_body", $msg_body);
 		update_option("mxp_mitake_debug_mode", $debug_mode);
+		update_option("mxp_mitake_enable_feature", $enable_feature);
 		echo "更新完成！</br>";
 	}
 }
 
 ?>
 <form action="" method="POST">
+	功能啟用：<select name="mxp_mitake_enable_feature"><option value="no" <?php selected(get_option("mxp_mitake_enable_feature"), "no");?>>否</option><option value="yes" <?php selected(get_option("mxp_mitake_enable_feature"), "yes");?>>是</option></select></br>
 	三竹帳號：<input type="text" value="<?php echo get_option("mxp_mitake_account"); ?>" name="mxp_mitake_account" size="20"  /></br>
 	三竹密碼：<input type="text" value="<?php echo get_option("mxp_mitake_password"); ?>" name="mxp_mitake_password" size="20"  /></br>
 	簡訊文字：<textarea name="mxp_mitake_msg_body" rows="3" cols="40"><?php echo get_option("mxp_mitake_msg_body", ""); ?></textarea></br>
