@@ -13,7 +13,7 @@ if (!empty($_POST) && wp_verify_nonce($_REQUEST['_wpnonce'], 'mxp-wc-mitake-main
 		update_option("mxp_mitake_password", $password);
 		update_option("mxp_mitake_msg_body", $msg_body);
 		update_option("mxp_mitake_debug_mode", $debug_mode);
-		echo "更新完成</br>";
+		echo "更新完成！</br>";
 	}
 }
 
@@ -29,4 +29,3 @@ if (!empty($_POST) && wp_verify_nonce($_REQUEST['_wpnonce'], 'mxp-wc-mitake-main
 </form>
 <p>外掛版本：v1.0.0</p>
 <p>作者：<a href="https://www.mxp.tw/contact/" target="blank">江弘竣（阿竣）Chun</a></p>
-<p>請作者咖啡：<a href="https://mxp.tw/lw" target="blank">鼓勵一下</a></p>
