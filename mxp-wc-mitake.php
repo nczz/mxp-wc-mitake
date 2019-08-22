@@ -4,7 +4,7 @@ Plugin Name: WooCommerce 三竹簡訊整合
 Plugin URI: https://github.com/nczz/mxp-wc-mitake
 Description: 設定傳送完成訂單後的簡訊
 Author: Chun
-Version: 1.0
+Version: 1.0.0
 Author URI: https://www.mxp.tw/
  */
 
@@ -73,7 +73,7 @@ function mxp_mitake_get_points($username, $password, $debug = "no") {
 }
 
 function register_mxp_wc_mitake_custom_submenu_page() {
-	add_submenu_page('woocommerce', '三竹簡訊整合', '三竹簡訊整合', 'manage_options', 'my-custom-submenu-page', 'mxp_wc_mitake_submenu_page_callback');
+	add_submenu_page('woocommerce', '三竹簡訊整合', '三竹簡訊整合', 'manage_options', 'mxp-wc-mitake-submenu-page', 'mxp_wc_mitake_submenu_page_callback');
 }
 
 function mxp_wc_mitake_submenu_page_callback() {
@@ -103,7 +103,7 @@ function mxp_sms_payment_complete_hook($order_id) {
 			$order->add_order_note("手機格式錯誤「{$mobile}」，無法發送簡訊。");
 		}
 	} else {
-		$order->add_order_note("提醒：簡訊發送功能尚未開啟，請至外掛頁面啟用。");
+		$order->add_order_note("提醒：簡訊發送功能尚未開啟，請至 [WooCommerce -> 三竹簡訊整合] 頁面啟用。");
 	}
 }
 add_action('woocommerce_order_status_completed', 'mxp_sms_payment_complete_hook');
