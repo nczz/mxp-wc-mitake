@@ -8,6 +8,10 @@ Version: 1.0.0
 Author URI: https://www.mxp.tw/
  */
 
+if (!defined('WPINC')) {
+	die;
+}
+
 /**
  ** @param username 三竹簡訊用戶帳號
  ** @param password 三竹簡訊用戶密碼
