@@ -18,15 +18,15 @@ if (!empty($_POST) && wp_verify_nonce($_REQUEST['_wpnonce'], 'mxp-wc-mitake-main
 			if ($username != "" && $password != "" && $msg != "") {
 				$resp = mxp_mitake_send_sms($username, $password, $test_sms, $msg, get_option("mxp_mitake_debug_mode", "no"));
 				if (isset($resp['error'])) {
-					echo ("傳送簡訊失敗！" . PHP_EOL . "三竹簡訊 API 回應：" . PHP_EOL . $resp['error']);
+					echo "傳送簡訊失敗！" . PHP_EOL . "三竹簡訊 API 回應：" . PHP_EOL . $resp['error'];
 				} else {
-					echo ("已傳送簡訊「" . $msg . "」至「" . $order->get_billing_last_name() . $order->get_billing_first_name() . "」手機「" . $order->get_billing_phone() . "」。" . PHP_EOL . "三竹簡訊 API 回應：" . PHP_EOL . print_r($resp, true));
+					echo "已傳送簡訊「" . $msg . "」至手機「" . $test_sms . "」。" . PHP_EOL . "三竹簡訊 API 回應：" . PHP_EOL . print_r($resp, true);
 				}
 			} else {
-				echo ("簡訊設定參數錯誤，無法發送簡訊。");
+				echo "簡訊設定參數錯誤，無法發送簡訊。";
 			}
 		} else {
-			echo ("手機格式錯誤「{$test_sms}」，無法發送簡訊。");
+			echo "手機格式錯誤「{$test_sms}」，無法發送簡訊。";
 		}
 	}
 	if (isset($password) && isset($account) && !empty($password) && !empty($account) && !empty($msg_body) && !empty($debug_mode) && !empty($enable_feature)) {
@@ -51,9 +51,9 @@ if (!empty($_POST) && wp_verify_nonce($_REQUEST['_wpnonce'], 'mxp-wc-mitake-main
 <p><input type="submit" id="save" value="儲存設定" class="button action" /></p>
 </form>
 <form action="" method="POST">
-	測試手機：<input type="text" value="" name="mxp_mitake_test_sms" size="12"  /></br>
+	手機號碼：<input type="text" value="" name="mxp_mitake_test_sms" size="12"  /></br>
  <input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce('mxp-wc-mitake-main-setting-page'); ?>"/>
-<p><input type="submit" id="save" value="儲存設定" class="button action" /></p>
+<p><input type="submit" id="save" value="測試" class="button action" /></p>
 </form>
 <p>外掛版本：v1.0.0</p>
 <p>作者：<a href="https://www.mxp.tw/contact/" target="blank">江弘竣（阿竣）Chun</a></p>
