@@ -25,7 +25,7 @@ function mxp_mitake_send_sms($username, $password, $mobile, $text, $debug = "no"
 		'CharsetURL' => 'UTF-8',
 	);
 
-	$url = 'http://smsapi.mitake.com.tw/api/mtk/SmSend?' . http_build_query($package, '', '&', PHP_QUERY_RFC3986);
+	$url = 'http://smsb2c.mitake.com.tw/b2c/mtk/SmSend?' . http_build_query($package, '', '&', PHP_QUERY_RFC3986);
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -57,7 +57,7 @@ function mxp_mitake_get_points($username, $password, $debug = "no") {
 		'password' => $password,
 	);
 
-	$url = "http://smsapi.mitake.com.tw/api/mtk/SmQuery?" . http_build_query($package, '', '&', PHP_QUERY_RFC3986);
+	$url = "http://smsb2c.mitake.com.tw/b2c/mtk/SmQuery?" . http_build_query($package, '', '&', PHP_QUERY_RFC3986);
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
