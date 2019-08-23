@@ -10,10 +10,10 @@ if (!empty($_POST) && wp_verify_nonce($_REQUEST['_wpnonce'], 'mxp-wc-mitake-main
 	$debug_mode = $_POST['mxp_mitake_debug_mode'];
 	$enable_feature = $_POST['mxp_mitake_enable_feature'];
 	$test_sms = $_POST['mxp_mitake_test_sms'];
-	if (isset($test_sms) && $test_sms != "" && get_option("mxp_mitake_msg_body") != "") {
+	if (isset($test_sms) && $test_sms != "" && isset($msg_body) && $msg_body != "") {
 		$username = get_option("mxp_mitake_account", "");
 		$password = get_option("mxp_mitake_password", "");
-		$msg = get_option("mxp_mitake_msg_body", "");
+		$msg = $msg_body;
 		if (strpos($test_sms, '09') === 0 && strlen($test_sms) == 10) {
 			if ($username != "" && $password != "" && $msg != "") {
 				$resp = mxp_mitake_send_sms($username, $password, $test_sms, $msg, get_option("mxp_mitake_debug_mode", "no"));
@@ -52,6 +52,7 @@ if (!empty($_POST) && wp_verify_nonce($_REQUEST['_wpnonce'], 'mxp-wc-mitake-main
 </form>
 <form action="" method="POST">
 	手機號碼：<input type="text" value="" name="mxp_mitake_test_sms" size="12"  /></br>
+	簡訊文字：<textarea name="mxp_mitake_msg_body" rows="3" cols="40"><?php echo get_option("mxp_mitake_msg_body", ""); ?></textarea></br>
  <input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce('mxp-wc-mitake-main-setting-page'); ?>"/>
 <p><input type="submit" id="save" value="測試" class="button action" /></p>
 </form>
