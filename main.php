@@ -40,6 +40,7 @@ if (!empty($_POST) && wp_verify_nonce($_REQUEST['_wpnonce'], 'mxp-wc-mitake-main
 }
 
 ?>
+<h3>三竹簡訊整合</h3>
 <form action="" method="POST">
 	功能啟用：<select name="mxp_mitake_enable_feature"><option value="no" <?php selected(get_option("mxp_mitake_enable_feature"), "no");?>>否</option><option value="yes" <?php selected(get_option("mxp_mitake_enable_feature"), "yes");?>>是</option></select></br>
 	三竹帳號：<input type="text" value="<?php echo get_option("mxp_mitake_account"); ?>" name="mxp_mitake_account" size="20"  /></br>
