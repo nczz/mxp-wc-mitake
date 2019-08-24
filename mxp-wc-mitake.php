@@ -86,19 +86,19 @@ function mxp_mitake_get_points($username, $password, $debug = "no") {
 function mxp_parse_mitake_response($output_arr) {
 	foreach ($output_arr as $output) {
 		if (preg_match("/statuscode/i", $output)) {
-			$statuscode = strchr($output, "="); // 取"="之後，包含"="的所有字串
-			$statuscode = str_replace("=", "", $statuscode); //將"="去除
-			$statuscode = trim($statuscode); //去除空白
+			$statuscode = strchr($output, "=");
+			$statuscode = str_replace("=", "", $statuscode);
+			$statuscode = trim($statuscode);
 		}
 		if (preg_match("/msgid/i", $output)) {
-			$msgid = strchr($output, "="); // 取"="之後，包含"="的所有字串
-			$msgid = str_replace("=", "", $msgid); //將"="去除
-			$msgid = trim($msgid); //去除空白
+			$msgid = strchr($output, "=");
+			$msgid = str_replace("=", "", $msgid);
+			$msgid = trim($msgid);
 		}
 		if (preg_match("/Error/i", $output)) {
-			$error = strchr($output, "="); // 取"="之後，包含"="的所有字串
-			$error = str_replace("=", "", $error); //將"="去除
-			$error = trim($error); //去除空白
+			$error = strchr($output, "=");
+			$error = str_replace("=", "", $error);
+			$error = trim($error);
 		}
 	}
 	if (empty($msgid)) {

@@ -58,4 +58,5 @@ if (!empty($_POST) && wp_verify_nonce($_REQUEST['_wpnonce'], 'mxp-wc-mitake-main
 <p><input type="submit" id="save" value="測試" class="button action" /></p>
 </form>
 <p>外掛版本：v1.0.0</p>
-<p>作者：<a href="https://www.mxp.tw/contact/" target="blank">江弘竣（阿竣）Chun</a></p>
+<p>聯絡作者：<a href="https://www.mxp.tw/contact/" target="blank">江弘竣（阿竣）Chun</a></p>
+<p>贊助作者：<a href="https://mxp.tw/lw" target="blank">覺得好用？買杯咖啡請阿竣吧！</a></p>
